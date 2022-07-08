@@ -10,9 +10,11 @@ public class CubePool : MonoBehaviour
 
     public static GameObject cubeColor;
     public static Material cubeColorMaterial;
+    public static GameObject cubeFinish;
     // Start is called before the first frame update
     void Awake()
     {
+        cubeFinish = GameObject.Find("Finish");
         cubeBlue = GameObject.Find("GreenBtn");
         cubeRed = GameObject.Find("RedBtn");
         cubeGreen = GameObject.Find("BlueBtn");

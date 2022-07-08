@@ -6,13 +6,13 @@ public class CreatePlatform : MonoBehaviour
 {
     [SerializeField] GameObject[] platforms;
 
-    private void Start()
+    private void Awake()
     {
         CreatePlatforms();
     }
     public void CreatePlatforms()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 15 * CreateCubes.episode; i++)
         {
             Instantiate(platforms[0], new Vector3(i * 10, 0f, 0f), Quaternion.identity);
         }

@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FrontCube : MonoBehaviour
 {
+    [SerializeField] GameObject deadPanel;
+    [SerializeField] GameObject nextLevelPanel;
+
+    [SerializeField] GameObject particleSystem;
     [SerializeField] AudioSource bing1;
+    [SerializeField] AudioSource bing2;
     bool colorBtn = false;
     float a = 0;
     GameObject[] frontCubes;
@@ -12,19 +18,17 @@ public class FrontCube : MonoBehaviour
     [SerializeField] GameObject frontCube;
     [SerializeField] GameObject player;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         GameObject[] frontCubes = GameObject.FindGameObjectsWithTag("frontcube");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.tag == "Finish")
+        {
+            Finish();
+        }
         if (other.gameObject.tag == "colorbtn")
         {
             MeshRenderer colorCube = other.GetComponent<MeshRenderer>();
@@ -37,7 +41,9 @@ public class FrontCube : MonoBehaviour
             {
                 if (other.gameObject.tag == "redbtn")
                 {
-                    Debug.Log("kırmızıya bastın");
+                    GameObject effect = Instantiate(particleSystem, frontCube.transform.position + new Vector3(1f, 0f, 0f), Quaternion.identity);
+                    ParticleSystem particle = effect.GetComponent<ParticleSystem>();
+                    particle.startColor = Color.red;
                     Destroy(other.gameObject);
                     CreateFrontCube();
                 }
@@ -50,7 +56,9 @@ public class FrontCube : MonoBehaviour
             {
                 if (other.gameObject.tag == "bluebtn")
                 {
-                    Debug.Log("kırmızıya bastın");
+                    GameObject effect = Instantiate(particleSystem, frontCube.transform.position + new Vector3(1f, 0f, 0f), Quaternion.identity);
+                    ParticleSystem particle = effect.GetComponent<ParticleSystem>();
+                    particle.startColor = Color.blue;
                     Destroy(other.gameObject);
                     CreateFrontCube();
                 }
@@ -63,7 +71,9 @@ public class FrontCube : MonoBehaviour
             {
                 if (other.gameObject.tag == "greenbtn")
                 {
-                    Debug.Log("kırmızıya bastın");
+                    GameObject effect = Instantiate(particleSystem, frontCube.transform.position + new Vector3(1f, 0f, 0f), Quaternion.identity);
+                    ParticleSystem particle = effect.GetComponent<ParticleSystem>();
+                    particle.startColor = Color.green;
                     Destroy(other.gameObject);
                     CreateFrontCube();
                 }
@@ -88,7 +98,6 @@ public class FrontCube : MonoBehaviour
         bing1.Play();
         a = a + 0.05f;
         Instantiate(frontCube, frontCube.transform.position + new Vector3(0f,a,0f), Quaternion.identity, player.transform);
-      
     }
 
     void DeleteFrontCube()
@@ -97,8 +106,46 @@ public class FrontCube : MonoBehaviour
         GameObject[] frontCubes = GameObject.FindGameObjectsWithTag("frontcube");
         if (frontCubes.Length < 1)
         {
-            Debug.Log("You Are Die");
+            CharacterMove.dead = true;
+            Invoke("DeadPanelOpen", 1f);
         }
+        bing2.Play();
         Destroy(frontCubes[frontCubes.Length - 1]);
+    }
+
+    void Finish()
+    {
+        GameObject[] frontCubes = GameObject.FindGameObjectsWithTag("frontcube");
+        foreach (GameObject item in frontCubes)
+        {
+            item.AddComponent<BoxCollider>();
+            item.AddComponent<Rigidbody>();
+            Rigidbody rb = item.GetComponent<Rigidbody>();
+            rb.AddForce(Vector3.right * 500f);
+        }
+        CreateCubes.episode++;
+        PlayerPrefs.SetInt("levels", CreateCubes.episode);
+        CharacterMove.dead = true;
+        Invoke("NextPanelOpen", 1f);
+    }
+
+    void DeadPanelOpen()
+    {
+        deadPanel.SetActive(true);
+    }
+
+    void NextPanelOpen()
+    {
+        nextLevelPanel.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
     }
 }

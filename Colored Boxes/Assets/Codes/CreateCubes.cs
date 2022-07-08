@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class CreateCubes : MonoBehaviour
 {
-
+    public static int episode = 1;
+    float mapLength = 100;
     int rnd;
     private void Start()
     {
-        for (int x = 20; x < 100; x=x+20)
+        if (PlayerPrefs.HasKey("levels"))
+        {
+            episode = PlayerPrefs.GetInt("levels");
+        }
+        Debug.Log("lan" + episode);
+        for (int x = 20; x < mapLength * episode; x = x + 20)
         {
             rnd = Random.Range(1, 4);
 
@@ -18,7 +24,7 @@ public class CreateCubes : MonoBehaviour
             {
                 newColorBtnMesh.material.color = Color.red;
             }
-            else if (rnd == 1)
+            else if (rnd == 2)
             {
                 newColorBtnMesh.material.color = Color.blue;
             }
@@ -27,7 +33,7 @@ public class CreateCubes : MonoBehaviour
                 newColorBtnMesh.material.color = Color.green;
             }
             Debug.Log(x);
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < mapLength / 10; i++)
             {
                 if (rnd == 1)
                 {
@@ -49,6 +55,6 @@ public class CreateCubes : MonoBehaviour
                 }
             }
         }
-
+        Instantiate(CubePool.cubeFinish, new Vector3(-0.35f + (mapLength * episode) - 7f, 0.49f, 0f), Quaternion.identity);
     }
 }
