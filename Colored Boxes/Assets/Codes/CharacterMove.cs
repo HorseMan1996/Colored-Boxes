@@ -5,16 +5,21 @@ using TMPro;
 
 public class CharacterMove : MonoBehaviour
 {
-    public static TMP_Text episodeText;
+    float speed = 0.15f;
+    [SerializeField] TMP_Text episodeText;
     public static bool dead = false; 
     static int rndColor;
     float playerX;
+    [SerializeField] Joystick joyStick;
     [SerializeField] GameObject frontCube;
     [SerializeField] Material frontCubeMaterial;
+    private void Start()
+    {
+        episodeText.text = System.Convert.ToString(CreateCubes.episode);
+    }
     // Start is called before the first frame update
     void Awake()
     {
-        episodeText = GameObject.Find("Episode").GetComponent<TMP_Text>();
         dead = false;
         rndColor = Random.Range(1, 4);
         if (rndColor == 1)
@@ -34,27 +39,26 @@ public class CharacterMove : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        playerX = Input.GetAxis("Horizontal") / 10f;
+        playerX = joyStick.Horizontal / 10f;
 
             if (!dead)
             {
                 if (transform.position.z >= -2.50f && transform.position.z <= 2.50f)
                 {
-                    transform.position = transform.position + new Vector3(0.2f, 0f, -playerX);
+                    transform.position = transform.position + new Vector3(speed, 0f, -playerX);
                 }
                 else
                 {
                     if (transform.position.z <= -2.50f)
                     {
-                        transform.position = transform.position + new Vector3(0.2f, 0f, 0.01f);
+                        transform.position = transform.position + new Vector3(speed, 0f, 0.01f);
                     }
                     else if (transform.position.z >= 2.50f)
                     {
-                        transform.position = transform.position + new Vector3(0.2f, 0f, -0.01f);
+                        transform.position = transform.position + new Vector3(speed, 0f, -0.01f);
                     }
                 }
             }
-
     }
     private void OnDisable()
     {

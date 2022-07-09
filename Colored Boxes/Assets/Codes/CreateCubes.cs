@@ -7,13 +7,16 @@ public class CreateCubes : MonoBehaviour
     public static int episode = 1;
     float mapLength = 100;
     int rnd;
-    private void Start()
+    private void Awake()
     {
         if (PlayerPrefs.HasKey("levels"))
         {
             episode = PlayerPrefs.GetInt("levels");
         }
-        Debug.Log("lan" + episode);
+    }
+    private void Start()
+    {
+
         for (int x = 20; x < mapLength * episode; x = x + 20)
         {
             rnd = Random.Range(1, 4);

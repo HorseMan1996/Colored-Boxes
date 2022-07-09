@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class FrontCube : MonoBehaviour
 {
+    [SerializeField] CinemachineVirtualCamera CameraFollow;
     [SerializeField] GameObject deadPanel;
     [SerializeField] GameObject nextLevelPanel;
 
     [SerializeField] GameObject particleSystem;
+    [SerializeField] GameObject wrongParticleSystem;
     [SerializeField] AudioSource bing1;
     [SerializeField] AudioSource bing2;
     bool colorBtn = false;
@@ -104,12 +107,13 @@ public class FrontCube : MonoBehaviour
     {
         a = a - 0.05f;
         GameObject[] frontCubes = GameObject.FindGameObjectsWithTag("frontcube");
-        if (frontCubes.Length < 1)
+        if (frontCubes.Length <= 1)
         {
             CharacterMove.dead = true;
             Invoke("DeadPanelOpen", 1f);
         }
         bing2.Play();
+        Instantiate(wrongParticleSystem, frontCube.transform.position + new Vector3(1f, 0f, 0f), Quaternion.identity);
         Destroy(frontCubes[frontCubes.Length - 1]);
     }
 
